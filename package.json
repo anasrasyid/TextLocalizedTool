@@ -1,7 +1,7 @@
 {
   "name": "com.personaltools.textlocalizedtool",
   "version": "1.0.0",
-  "displayName": "Package Example",
+  "displayName": "Simple Text Localized",
   "description": "This is an text loaclized tools",
   "unity": "2019.4",
   "unityRelease": "13f1",
@@ -10,5 +10,14 @@
     "email": "anasrasyid333@gmail.com",
     "url": ""
   },
-  "type": "tool"
+  "samples": [
+      {
+        "displayName": "Simple Main Menu",
+
+         "description": "Main Menu with Localization",
+
+         "path": "Samples/Simple Use Localization"
+      }
+   ],
+   "type": "tool"
 }
