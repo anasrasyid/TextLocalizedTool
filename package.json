@@ -1,0 +1,14 @@
+{
+  "name": "com.anasrasyid.textlocalizedtool",
+  "version": "1.0.0",
+  "displayName": "Package Example",
+  "description": "This is an text loaclized tools",
+  "unity": "2019.4",
+  "unityRelease": "13f1",
+  "author": {
+    "name": "Anas Rasyid",
+    "email": "anasrasyid333@gmail.com",
+    "url": ""
+  },
+  "type": "tool"
+}
