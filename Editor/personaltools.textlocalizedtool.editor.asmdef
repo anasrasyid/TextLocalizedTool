@@ -1,0 +1,17 @@
+{
+    "name": "personaltools.textlocalizedtool.editor",
+    "references": [
+        "GUID:3d395601666e0284dbd80ea5bd1dae19"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
