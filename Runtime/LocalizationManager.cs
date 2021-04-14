@@ -10,13 +10,10 @@ namespace personaltools.textlocalizedtool
         public static LocalizationManager Instance { get; private set; }
 
         public Languages currentLanguage;
-        public TextAsset localizationCSV = LocalizationSystem.AssetCSV;
-
         public Action onChangeLanguage;
 
         private void OnValidate()
         {
-            LocalizationSystem.AssetCSV = localizationCSV;
             ChangeLanguage(currentLanguage);
         }
 

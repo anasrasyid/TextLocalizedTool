@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace personaltools.textlocalizedtool
@@ -40,6 +42,7 @@ namespace personaltools.textlocalizedtool
 
         public static CSVLoader csvLoader;
         private static TextAsset assetCSV;
+        
         public static TextAsset AssetCSV { 
             get 
             {
@@ -47,12 +50,46 @@ namespace personaltools.textlocalizedtool
             } 
             set 
             {
-                if(value != null)
+                if(value != null && value != assetCSV)
                 {
                     assetCSV = value;
                     Init();
                 }
             } 
+        }
+
+        private static string csvURL;
+        public static string CSVURL
+        {
+            get
+            {
+                return csvURL;
+            }
+            set
+            {
+                if(value != null && value != csvURL)
+                {
+                    csvURL = value;
+                    DownloadFileAsnyc(csvURL);
+                }
+            }
+        }
+
+        private static async void DownloadFileAsnyc(string url)
+        {
+            string result = await Task.Run(() =>
+            {
+                string rawFile = string.Empty;
+                using (WebClient client = new WebClient())
+                {
+                    rawFile = client.DownloadString(csvURL);
+                    Debug.Assert(rawFile != string.Empty, "Error Localization URL");
+                }
+                return rawFile;
+            });
+
+            AssetCSV = new TextAsset(result);
+            Debug.Log(result);
         }
 
         public static void Init()

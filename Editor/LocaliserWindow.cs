@@ -20,16 +20,44 @@ namespace personaltools.textlocalizedtool.editor
 
         string value;
         private Vector2 scroll;
-        private bool isAutoTranslate;
-        private Languages autoLanguage;
+
+        private enum WindowState { Initialize, Local, Cloud };
+        static WindowState currentState = WindowState.Initialize;
 
         public void OnEnable()
         {
-            LocalizationSystem.DefaultLanguage = defaultLanguage;
+            if(currentState != WindowState.Initialize)
+                LocalizationSystem.DefaultLanguage = defaultLanguage;
         }
 
         public void OnGUI()
         {
+            EditorGUILayout.BeginHorizontal("box");
+            var local = GUILayout.Button("Local File");
+            var cloud = GUILayout.Button("Cloud File");
+            EditorGUILayout.EndHorizontal();
+
+            currentState = local ? WindowState.Local : currentState;
+            currentState = cloud ? WindowState.Cloud : currentState;
+
+            if (currentState == WindowState.Initialize)
+                return;
+
+            if (currentState == WindowState.Local)
+            {
+                LocalizationSystem.AssetCSV = (TextAsset)
+                EditorGUILayout.ObjectField("Localization File", LocalizationSystem.AssetCSV, typeof(TextAsset), false);
+            }            
+
+            if (currentState == WindowState.Cloud)
+            {
+                LocalizationSystem.CSVURL =
+                    EditorGUILayout.TextField("Localization URL", LocalizationSystem.CSVURL);
+            }                
+
+            if (LocalizationSystem.AssetCSV == null)
+                return;
+
             SearchBar();
 
             ShowAll();
