@@ -36,27 +36,36 @@ namespace personaltools.textlocalizedtool.editor
             EditorGUILayout.LabelField("Search: ", EditorStyles.boldLabel);
             value = EditorGUILayout.TextField(value);
 
-            GUIContent addContent = EditorGUIUtility.IconContent("CreateAddNew", "Add New Key");
-            if (GUILayout.Button(addContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
+            if(LocalizationSystem.ActiveMode == LocalizationSystem.Mode.Offline)
             {
-                string languageCode = LocalizationSystem.DefaultLanguage.GetStringValue();
-                TextLocaliserEditWindow.Open(value, language: languageCode);
-            }
+                GUIContent addContent = EditorGUIUtility.IconContent("CreateAddNew", "Add New Key");
+                if (GUILayout.Button(addContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
+                {
+                    string languageCode = LocalizationSystem.DefaultLanguage.GetStringValue();
+                    TextLocaliserEditWindow.Open(value, language: languageCode);
+                }
+            }            
             EditorGUILayout.EndHorizontal();
         }
 
         public void ShowLanguageInCSV()
         {
-            GUILayout.Label("Language", EditorStyles.boldLabel);
+            GUILayout.Label("Details", EditorStyles.boldLabel);
 
-            //GUILayout.FlexibleSpace();
+            EditorGUILayout.BeginHorizontal("Box");
+
             defaultLanguage = (Languages)EditorGUILayout.EnumPopup
-                ("Editor Language :", defaultLanguage, GUILayout.MinWidth(220), GUILayout.MaxWidth(250));
+                ("Editor Language :", defaultLanguage, GUILayout.MinWidth(250), GUILayout.MaxWidth(300));
 
             if (LocalizationSystem.DefaultLanguage != defaultLanguage)
             {
                 LocalizationSystem.DefaultLanguage = defaultLanguage;
             }
+
+            GUILayout.Space(80);
+
+            EditorGUILayout.LabelField("Active Mode : " + LocalizationSystem.ActiveMode.ToString());
+            GUILayout.EndHorizontal();
         }
 
         public void ShowAll()
@@ -67,6 +76,19 @@ namespace personaltools.textlocalizedtool.editor
             EditorGUILayout.BeginVertical();
             scroll = EditorGUILayout.BeginScrollView(scroll);
             var dictionary = LocalizationSystem.GetDictionartForEditor();
+            
+            EditorGUILayout.BeginHorizontal("Box");
+
+            if (LocalizationSystem.ActiveMode == LocalizationSystem.Mode.Offline)
+                GUILayout.Space(50);
+            else
+                GUILayout.Space(10);
+
+            EditorGUILayout.LabelField("Key");
+            EditorGUILayout.LabelField("Value");
+
+            EditorGUILayout.EndHorizontal();
+            
             foreach (KeyValuePair<string, string> element in dictionary)
             {
                 DrawItem(element);
@@ -99,26 +121,34 @@ namespace personaltools.textlocalizedtool.editor
         {
             EditorGUILayout.BeginHorizontal("box");
 
-            GUIContent deleteContent = EditorGUIUtility.IconContent("winbtn_win_close", "Remove");
-            if (GUILayout.Button(deleteContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
+            if (LocalizationSystem.ActiveMode == LocalizationSystem.Mode.Offline)
             {
-                if (EditorUtility.DisplayDialog("Remove Key " + element.Key + "?",
-                    "This will remove the element from localisation, are sure?", "Do it"))
+                GUIContent deleteContent = EditorGUIUtility.IconContent("winbtn_win_close", "Remove");
+                if (GUILayout.Button(deleteContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
                 {
-                    LocalizationSystem.Remove(element.Key);
-                    AssetDatabase.Refresh();
-                    LocalizationSystem.Init();
+                    if (EditorUtility.DisplayDialog("Remove Key " + element.Key + "?",
+                        "This will remove the element from localisation, are sure?", "Do it"))
+                    {
+                        LocalizationSystem.Remove(element.Key);
+                        AssetDatabase.Refresh();
+                        LocalizationSystem.Init();
+                    }
+                }
+
+                GUIContent editContent = EditorGUIUtility.IconContent("_Popup", "Remove");
+                if (GUILayout.Button(editContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
+                {
+                    string languageCode = LocalizationSystem.DefaultLanguage.GetStringValue();
+                    TextLocaliserEditWindow.Open(element.Key, element.Value, languageCode);
                 }
             }
-
-            GUIContent editContent = EditorGUIUtility.IconContent("_Popup", "Remove");
-            if (GUILayout.Button(editContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
+            else
             {
-                string languageCode = LocalizationSystem.DefaultLanguage.GetStringValue();
-                TextLocaliserEditWindow.Open(element.Key, element.Value, languageCode);
-            }
+                GUILayout.Space(5);
+            }         
 
             EditorGUILayout.TextField(element.Key);
+            GUILayout.Space(10);
             EditorGUILayout.LabelField(element.Value);
             EditorGUILayout.EndHorizontal();
         }
