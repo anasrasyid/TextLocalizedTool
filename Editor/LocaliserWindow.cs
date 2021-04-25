@@ -11,73 +11,23 @@ namespace personaltools.textlocalizedtool.editor
         {
             LocaliserWindow window = (LocaliserWindow)EditorWindow.GetWindow<LocaliserWindow>();
             window.titleContent.text = "Localiser Window";
-            window.minSize = new Vector2(480, 300);
+            window.minSize = new Vector2(480, 360);
             window.Show();
         }
 
         Languages defaultLanguage = LocalizationSystem.DefaultLanguage;
-        Languages currentLanguage = LocalizationSystem.Language;
 
         string value;
         private Vector2 scroll;
 
-        private enum WindowState { Initialize, Local, Cloud };
-        static WindowState currentState = WindowState.Initialize;
-
-        public void OnEnable()
-        {
-            if(currentState != WindowState.Initialize)
-                LocalizationSystem.DefaultLanguage = defaultLanguage;
-        }
-
         public void OnGUI()
         {
-            EditorGUILayout.BeginHorizontal("box");
-            var local = GUILayout.Button("Local File");
-            var cloud = GUILayout.Button("Cloud File");
-            EditorGUILayout.EndHorizontal();
-
-            currentState = local ? WindowState.Local : currentState;
-            currentState = cloud ? WindowState.Cloud : currentState;
-
-            if (currentState == WindowState.Initialize)
-                return;
-
-            if (currentState == WindowState.Local)
-            {
-                LocalizationSystem.AssetCSV = (TextAsset)
-                EditorGUILayout.ObjectField("Localization File", LocalizationSystem.AssetCSV, typeof(TextAsset), false);
-            }            
-
-            if (currentState == WindowState.Cloud)
-            {
-                LocalizationSystem.CSVURL =
-                    EditorGUILayout.TextField("Localization URL", LocalizationSystem.CSVURL);
-            }                
-
-            if (LocalizationSystem.AssetCSV == null)
-                return;
-
             SearchBar();
 
             ShowAll();
             GetSearchResults();
 
             ShowLanguageInCSV();
-
-            ChangeLanguage();
-        }
-
-        public void ChangeLanguage()
-        {
-            if (LocalizationSystem.Language != currentLanguage)
-            {
-                LocalizationSystem.Language = currentLanguage;
-            }
-            if (LocalizationSystem.DefaultLanguage != defaultLanguage)
-            {
-                LocalizationSystem.DefaultLanguage = defaultLanguage;
-            }
         }
 
         public void SearchBar()
@@ -98,14 +48,14 @@ namespace personaltools.textlocalizedtool.editor
         {
             GUILayout.Label("Language", EditorStyles.boldLabel);
 
-            EditorGUILayout.BeginHorizontal("box");
+            //GUILayout.FlexibleSpace();
             defaultLanguage = (Languages)EditorGUILayout.EnumPopup
-                ("Editor Language :", defaultLanguage, GUILayout.MinWidth(220));
+                ("Editor Language :", defaultLanguage, GUILayout.MinWidth(220), GUILayout.MaxWidth(250));
 
-            currentLanguage = (Languages)EditorGUILayout.EnumPopup
-                ("Current Language : ", currentLanguage, GUILayout.MinWidth(220));
-
-            EditorGUILayout.EndHorizontal();
+            if (LocalizationSystem.DefaultLanguage != defaultLanguage)
+            {
+                LocalizationSystem.DefaultLanguage = defaultLanguage;
+            }
         }
 
         public void ShowAll()

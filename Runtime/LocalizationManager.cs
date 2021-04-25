@@ -12,8 +12,15 @@ namespace personaltools.textlocalizedtool
         public Languages currentLanguage;
         public Action onChangeLanguage;
 
+        public LocalizationSystem.Mode currentMode;
+        public TextAsset AssetCSV;
+        public string CSVURL;
+
         private void OnValidate()
         {
+            LocalizationSystem.ActiveMode = currentMode;
+            LocalizationSystem.AssetCSV = AssetCSV;
+            LocalizationSystem.CSVURL = CSVURL;
             ChangeLanguage(currentLanguage);
         }
 

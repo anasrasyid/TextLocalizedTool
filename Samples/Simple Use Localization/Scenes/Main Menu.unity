@@ -228,7 +228,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentLanguage: 0
-  localizationCSV: {fileID: 4900000, guid: eb9f8c98aeb7e6a428cfc8a4e8d5135b, type: 3}
+  currentMode: 1
+  AssetCSV: {fileID: 4900000, guid: eb9f8c98aeb7e6a428cfc8a4e8d5135b, type: 3}
+  CSVURL: 
 --- !u!4 &258663795
 Transform:
   m_ObjectHideFlags: 0

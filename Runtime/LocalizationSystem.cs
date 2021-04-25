@@ -40,6 +40,9 @@ namespace personaltools.textlocalizedtool
 
         private static bool isInit;
 
+        public enum Mode { Online, Offline};
+        public static Mode ActiveMode;
+
         public static CSVLoader csvLoader;
         private static TextAsset assetCSV;
         
@@ -50,7 +53,7 @@ namespace personaltools.textlocalizedtool
             } 
             set 
             {
-                if(value != null && value != assetCSV)
+                if(value != null && ActiveMode == Mode.Offline)
                 {
                     assetCSV = value;
                     Init();
@@ -59,6 +62,7 @@ namespace personaltools.textlocalizedtool
         }
 
         private static string csvURL;
+
         public static string CSVURL
         {
             get
@@ -67,16 +71,19 @@ namespace personaltools.textlocalizedtool
             }
             set
             {
-                if(value != null && value != csvURL)
+                if(value != String.Empty && ActiveMode == Mode.Online)
                 {
                     csvURL = value;
                     DownloadFileAsnyc(csvURL);
-                }
+                }                
             }
         }
 
         private static async void DownloadFileAsnyc(string url)
         {
+            if (url == string.Empty)
+                return;
+
             string result = await Task.Run(() =>
             {
                 string rawFile = string.Empty;
@@ -88,8 +95,8 @@ namespace personaltools.textlocalizedtool
                 return rawFile;
             });
 
-            AssetCSV = new TextAsset(result);
-            Debug.Log(result);
+            assetCSV = new TextAsset(result);
+            Init();
         }
 
         public static void Init()
