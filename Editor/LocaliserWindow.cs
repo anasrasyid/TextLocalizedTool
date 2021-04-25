@@ -39,7 +39,8 @@ namespace personaltools.textlocalizedtool.editor
             GUIContent addContent = EditorGUIUtility.IconContent("CreateAddNew", "Add New Key");
             if (GUILayout.Button(addContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
             {
-                TextLocaliserEditWindow.Open(value);
+                string languageCode = LocalizationSystem.DefaultLanguage.GetStringValue();
+                TextLocaliserEditWindow.Open(value, language: languageCode);
             }
             EditorGUILayout.EndHorizontal();
         }
@@ -113,7 +114,8 @@ namespace personaltools.textlocalizedtool.editor
             GUIContent editContent = EditorGUIUtility.IconContent("_Popup", "Remove");
             if (GUILayout.Button(editContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
             {
-                TextLocaliserEditWindow.Open(element.Key, element.Value);
+                string languageCode = LocalizationSystem.DefaultLanguage.GetStringValue();
+                TextLocaliserEditWindow.Open(element.Key, element.Value, languageCode);
             }
 
             EditorGUILayout.TextField(element.Key);

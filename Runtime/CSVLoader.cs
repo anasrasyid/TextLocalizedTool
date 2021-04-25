@@ -74,6 +74,38 @@ namespace personaltools.textlocalizedtool
             return dictionary;
         }
 
+        public string[] GetAllLanguage()
+        {
+            string[] lines = csvFile.text.Split(lineSeperator);
+
+            List<string> languages = new List<string>();
+
+            string[] header = CSVParser.Split(lines[0]);
+
+            for (int i = 1; i < header.Length; i++)
+            {
+                Trim(ref header[i]);
+                languages.Add(header[i]);
+            }
+
+            return languages.ToArray();
+        }
+
+        public int indexLanguage(string language)
+        {
+            string[] lines = csvFile.text.Split(lineSeperator);
+
+            string[] header = CSVParser.Split(lines[0]);
+
+            for (int i = 1; i < header.Length; i++)
+            {
+                Trim(ref header[i]);
+                if (header[i].Contains(language))
+                    return i;
+            }
+            return -1;
+        }
+
         public void Trim(ref string value)
         {
             value = value.TrimStart(' ', surround);
@@ -85,13 +117,23 @@ namespace personaltools.textlocalizedtool
 
 #if UNITY_EDITOR
 
-        public void Add(string key, string value)
+        public void Add(string key, string value, string language)
         {
             value.Replace(Environment.NewLine, "\n");
             string path = AssetDatabase.GetAssetPath(csvFile.GetInstanceID());
-            string append = string.Format("\n\"{0}\",\"{1}\",\"\"", key, value);
-            File.AppendAllText(path, append);
 
+            var header = GetAllLanguage();
+            string append = string.Format("\n\"{0}\"", key);
+
+            foreach (string h in header)
+            {
+                if (h.Contains(language))
+                    append += string.Format(",\"{0}\"", value);
+                else
+                    append += ",\"\"";
+            }
+            
+            File.AppendAllText(path, append);
             UnityEditor.AssetDatabase.Refresh();
         }
 
@@ -123,17 +165,43 @@ namespace personaltools.textlocalizedtool
             {
                 string[] newLines;
                 newLines = lines.Where(w => !(w != lines[index] ^ w != String.Empty)).ToArray();
-
-                string path = AssetDatabase.GetAssetPath(csvFile.GetInstanceID());
-                string replaced = string.Join(lineSeperator.ToString(), newLines);
-                File.WriteAllText(path, replaced);
+                WriteText(newLines);
+                UnityEditor.AssetDatabase.Refresh();
             }
         }
 
-        public void Edit(string key, string value)
+        private void WriteText(string[] lines)
         {
-            Remove(key);
-            Add(key, value);
+            string path = AssetDatabase.GetAssetPath(csvFile.GetInstanceID());
+            string replaced = string.Join(lineSeperator.ToString(), lines);
+            File.WriteAllText(path, replaced);
+        }
+
+        public void Edit(string key, string value, string language)
+        {
+            string[] lines = csvFile.text.Split(lineSeperator);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string line = lines[i];
+
+                var keys = line.Split(fieldSeperator, StringSplitOptions.None)[0];
+                if (keys.Contains(key))
+                {
+                    var fields = CSVParser.Split(line);
+                    var indexChange = indexLanguage(language);
+                    Debug.Log(line);
+
+                    if (indexChange != -1)
+                        fields[indexChange] = "\"" + value + "\"";
+                    Debug.Log(String.Join(",", fields));
+                    lines[i] = String.Join(",", fields);
+                    break;
+                }
+            }
+
+            WriteText(lines);
+            UnityEditor.AssetDatabase.Refresh();
         }
 
 #endif

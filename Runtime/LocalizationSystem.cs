@@ -149,7 +149,7 @@ namespace personaltools.textlocalizedtool
         public static string GetLocalisedValue(string key)
         {
             if (!isInit) { Init(); }
-            var value = key;
+            var value = string.Empty;
 
             localised.TryGetValue(key, out value);
 
@@ -157,9 +157,10 @@ namespace personaltools.textlocalizedtool
         }
 
 #if UNITY_EDITOR
-        public static void Add(string key, string value)
+        public static void Add(string key, string value, string language)
         {
-            if (value.Contains("\""))
+
+            if (value != null && value.Contains("\""))
             {
                 value.Replace('"', '\"');
             }
@@ -170,15 +171,15 @@ namespace personaltools.textlocalizedtool
             }
 
             csvLoader.LoadCSV(AssetCSV);
-            csvLoader.Add(key, value);
+            csvLoader.Add(key, value, language);
             csvLoader.LoadCSV(AssetCSV);
 
             UpdateDictionaries();
         }
 
-        public static void Replace(string key, string value)
+        public static void Replace(string key, string value, string language)
         {
-            if (value.Contains("\""))
+            if (value != null && value.Contains("\""))
             {
                 value.Replace('"', '\"');
             }
@@ -189,7 +190,7 @@ namespace personaltools.textlocalizedtool
             }
 
             csvLoader.LoadCSV(AssetCSV);
-            csvLoader.Edit(key, value);
+            csvLoader.Edit(key, value, language);
             csvLoader.LoadCSV(AssetCSV);
 
             UpdateDictionaries();

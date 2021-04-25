@@ -8,26 +8,18 @@ namespace personaltools.textlocalizedtool.editor
     {
         public string key;
         public string value;
+        private string language;
 
-        public static void Open(string key)
+        public static void Open(string key, string value = null, string language = null)
         {
-            TextLocaliserEditWindow window = new TextLocaliserEditWindow
-            {
-                titleContent = new GUIContent("Localiser Window")
-            };
-            window.ShowUtility();
-            window.key = key;
-        }
+            TextLocaliserEditWindow window = ScriptableObject.CreateInstance<TextLocaliserEditWindow>();
+            window.name = "Localisation Edit";
 
-        public static void Open(string key, string value)
-        {
-            TextLocaliserEditWindow window = new TextLocaliserEditWindow
-            {
-                titleContent = new GUIContent("Localiser Window")
-            };
-            window.ShowUtility();
             window.key = key;
             window.value = value;
+            window.language = language ?? LocalizationSystem.Language.GetStringValue();
+
+            window.ShowUtility();
         }
 
         public void OnGUI()
@@ -43,14 +35,15 @@ namespace personaltools.textlocalizedtool.editor
 
             if (GUILayout.Button("Add"))
             {
-                if (LocalizationSystem.GetLocalisedValue(key) != string.Empty)
+                if (LocalizationSystem.GetLocalisedValue(key) != null)
                 {
-                    LocalizationSystem.Replace(key, value);
+                    LocalizationSystem.Replace(key, value, language);
                 }
                 else
                 {
-                    LocalizationSystem.Add(key, value);
+                    LocalizationSystem.Add(key, value, language);
                 }
+                Close();
             }
 
             minSize = new Vector2(460, 250);
@@ -62,10 +55,8 @@ namespace personaltools.textlocalizedtool.editor
     {
         public static void Open()
         {
-            TextLocaliserSearchWindow window = new TextLocaliserSearchWindow
-            {
-                titleContent = new GUIContent("Localisation Search")
-            };
+            TextLocaliserSearchWindow window = ScriptableObject.CreateInstance<TextLocaliserSearchWindow>();
+            window.name = "Localisation Search";
 
             Vector2 mouse = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
             Rect rect = new Rect(mouse.x - 450, mouse.y + 10, 10, 10);
