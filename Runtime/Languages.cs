@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using UnityEngine;
 
 namespace personaltools.textlocalizedtool
 {
@@ -40,6 +41,19 @@ namespace personaltools.textlocalizedtool
 
             // Return the first if there was a match.
             return attribs.Length > 0 ? attribs[0].StringValue : null;
+        }
+
+        public static int GetLanguagesIndex(this string value)
+        {
+            int index = -1;
+
+            foreach (Languages lan in (Languages[]) Enum.GetValues(typeof(Languages)))
+            {
+                if (value.Contains(lan.GetStringValue()))
+                    index = (int)lan;
+            }
+
+            return index;
         }
     }
 }

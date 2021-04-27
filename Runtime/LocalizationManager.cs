@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace personaltools.textlocalizedtool
@@ -8,7 +9,10 @@ namespace personaltools.textlocalizedtool
     public class LocalizationManager : MonoBehaviour
     {
         public static LocalizationManager Instance { get; private set; }
+        public static int[] avaliable;
 
+        public static int[] LanguageAvailable = new int[] { };
+        [EnumPartial(typeof(LocalizationManager), "LanguageAvailable")]
         public Languages currentLanguage;
         public Action onChangeLanguage;
 
@@ -21,6 +25,9 @@ namespace personaltools.textlocalizedtool
             LocalizationSystem.ActiveMode = currentMode;
             LocalizationSystem.AssetCSV = AssetCSV;
             LocalizationSystem.CSVURL = CSVURL;
+            LanguageAvailable = LocalizationSystem.LanguageAvailable;
+
+            Debug.Log(currentLanguage);
             ChangeLanguage(currentLanguage);
         }
 

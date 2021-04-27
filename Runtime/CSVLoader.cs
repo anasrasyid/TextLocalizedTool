@@ -17,9 +17,14 @@ namespace personaltools.textlocalizedtool
         private readonly string[] fieldSeperator = { "\",\"" };
         private readonly Regex CSVParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
 
-        public void LoadCSV(TextAsset asset)
+        public void LoadCSV(TextAsset asset, out int[] languageIndex)
         {
             csvFile = asset;
+
+            var languagesString = GetAllLanguage();
+            languageIndex = new int[languagesString.Length];
+            for (int i = 0; i < languagesString.Length; i++)
+                languageIndex[i] = languagesString[i].GetLanguagesIndex();
         }
 
         public Dictionary<string, string> GetDictionary(string attributeId)
