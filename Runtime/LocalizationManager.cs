@@ -22,12 +22,7 @@ namespace personaltools.textlocalizedtool
 
         private void OnValidate()
         {
-            LocalizationSystem.ActiveMode = currentMode;
-            LocalizationSystem.AssetCSV = AssetCSV;
-            LocalizationSystem.CSVURL = CSVURL;
-            LanguageAvailable = LocalizationSystem.LanguageAvailable;
-
-            Debug.Log(currentLanguage);
+            ChangeMode(currentMode);
             ChangeLanguage(currentLanguage);
         }
 
@@ -47,6 +42,14 @@ namespace personaltools.textlocalizedtool
         private void Start()
         {
             currentLanguage = LocalizationSystem.Language;
+        }
+
+        public void ChangeMode(LocalizationSystem.Mode mode)
+        {
+            LocalizationSystem.onChangeCSV = (int[] param) => { LanguageAvailable = param; };
+            LocalizationSystem.ActiveMode = mode;
+            LocalizationSystem.AssetCSV = AssetCSV;
+            LocalizationSystem.CSVURL = CSVURL;
         }
 
         public void ChangeLanguage(Languages currentLanguage)

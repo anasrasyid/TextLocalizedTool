@@ -41,7 +41,7 @@ namespace personaltools.textlocalizedtool.editor
                 GUIContent addContent = EditorGUIUtility.IconContent("CreateAddNew", "Add New Key");
                 if (GUILayout.Button(addContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
                 {
-                    string languageCode = LocalizationSystem.DefaultLanguage.GetStringValue();
+                    string languageCode = LocalizationSystem.DefaultLanguage.GetStringValuesAtribute();
                     TextLocaliserEditWindow.Open(value, language: languageCode);
                 }
             }            
@@ -54,8 +54,20 @@ namespace personaltools.textlocalizedtool.editor
 
             EditorGUILayout.BeginHorizontal("Box");
 
-            defaultLanguage = (Languages)EditorGUILayout.EnumPopup
-                ("Editor Language :", defaultLanguage, GUILayout.MinWidth(250), GUILayout.MaxWidth(300));
+            var items = new string[LocalizationSystem.LanguageAvailable.Length];
+            int index = -1;
+            for(int i = 0; i < items.Length; i++)
+            {
+
+                items[i] = ((Languages)LocalizationSystem.LanguageAvailable[i]).ToString();
+                if((int)defaultLanguage == LocalizationSystem.LanguageAvailable[i])
+                    index = i;
+            }
+
+            index = EditorGUILayout.Popup("Editor Language :", index, items, 
+                GUILayout.MinWidth(250), GUILayout.MaxWidth(300));
+
+            defaultLanguage = items[index].GetLanguageEnum();
 
             if (LocalizationSystem.DefaultLanguage != defaultLanguage)
             {
@@ -138,7 +150,7 @@ namespace personaltools.textlocalizedtool.editor
                 GUIContent editContent = EditorGUIUtility.IconContent("_Popup", "Remove");
                 if (GUILayout.Button(editContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
                 {
-                    string languageCode = LocalizationSystem.DefaultLanguage.GetStringValue();
+                    string languageCode = LocalizationSystem.DefaultLanguage.GetStringValuesAtribute();
                     TextLocaliserEditWindow.Open(element.Key, element.Value, languageCode);
                 }
             }

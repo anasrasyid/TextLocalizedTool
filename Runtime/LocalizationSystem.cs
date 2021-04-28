@@ -44,6 +44,7 @@ namespace personaltools.textlocalizedtool
 
         public enum Mode { Online, Offline};
         public static Mode ActiveMode;
+        public static Action<int[]> onChangeCSV;
 
         public static CSVLoader csvLoader;
         private static TextAsset assetCSV;
@@ -98,8 +99,7 @@ namespace personaltools.textlocalizedtool
             });
 
             assetCSV = new TextAsset(result);
-            Init();
-            Debug.Log("Done Download File");
+            Init();            
         }
 
         public static void Init()
@@ -108,8 +108,9 @@ namespace personaltools.textlocalizedtool
 
             csvLoader = csvLoader ?? new CSVLoader();
             csvLoader.LoadCSV(AssetCSV, out langugaeIndex);
-            UpdateDictionaries();
+            onChangeCSV?.Invoke(langugaeIndex);
 
+            UpdateDictionaries();
             isInit = true;
         }
 
@@ -136,10 +137,10 @@ namespace personaltools.textlocalizedtool
 
         public static void UpdateDictionaries()
         {
-            string defaultCode = DefaultLanguage.GetStringValue();
+            string defaultCode = DefaultLanguage.GetStringValuesAtribute();
             defaultlocalised = csvLoader.GetDictionary(defaultCode);
 
-            string currentCode = Language.GetStringValue();
+            string currentCode = Language.GetStringValuesAtribute();
             localised = csvLoader.GetDictionary(currentCode);
         }
 

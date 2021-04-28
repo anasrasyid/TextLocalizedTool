@@ -321,7 +321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66fb63f622c747645913cabce1482ac8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLanguage: 0
+  currentLanguage: 19
   currentMode: 1
   AssetCSV: {fileID: 4900000, guid: eb9f8c98aeb7e6a428cfc8a4e8d5135b, type: 3}
   CSVURL: https://docs.google.com/spreadsheets/d/e/2PACX-1vTVhXKwc_oFQoPlj5WBaK6dII56TsSzv4fN3OBGZtnlRz7EoaFnW2s1JY_SutZoEvIZGJIow90882ih/pub?gid=0&single=true&output=csv

@@ -65,7 +65,7 @@ namespace personaltools.textlocalizedtool.Editor
             index = EditorGUI.Popup(position, label.text, index, items);
 
             // Get Real Index
-            int realIndex = -1;
+            int realIndex = arrayIndex[0].Second;
             for (int i = 0; i < arrayIndex.Length; i++)
             {
                 if (arrayIndex[i].First == index)

@@ -17,7 +17,7 @@ namespace personaltools.textlocalizedtool.editor
 
             window.key = key;
             window.value = value;
-            window.language = language ?? LocalizationSystem.Language.GetStringValue();
+            window.language = language ?? LocalizationSystem.Language.GetStringValuesAtribute();
 
             window.ShowUtility();
         }

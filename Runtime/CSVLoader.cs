@@ -23,8 +23,13 @@ namespace personaltools.textlocalizedtool
 
             var languagesString = GetAllLanguage();
             languageIndex = new int[languagesString.Length];
+
             for (int i = 0; i < languagesString.Length; i++)
-                languageIndex[i] = languagesString[i].GetLanguagesIndex();
+            {
+                // Get Language By key code
+                languageIndex[i] = languagesString[i].GetLanguagesIndexFromCode();
+            }
+                
         }
 
         public Dictionary<string, string> GetDictionary(string attributeId)
@@ -116,8 +121,7 @@ namespace personaltools.textlocalizedtool
             value = value.TrimStart(' ', surround);
             value = value.TrimEnd(surround);
 
-            if (value.Contains("\""))
-                value = value.Remove(value.Length - 2, 2);
+            value = value.Replace("\n", "").Replace("\r", "");
         }
 
 #if UNITY_EDITOR
@@ -195,11 +199,10 @@ namespace personaltools.textlocalizedtool
                 {
                     var fields = CSVParser.Split(line);
                     var indexChange = indexLanguage(language);
-                    Debug.Log(line);
 
                     if (indexChange != -1)
                         fields[indexChange] = "\"" + value + "\"";
-                    Debug.Log(String.Join(",", fields));
+
                     lines[i] = String.Join(",", fields);
                     break;
                 }
