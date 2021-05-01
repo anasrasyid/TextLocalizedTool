@@ -125,6 +125,16 @@ namespace personaltools.textlocalizedtool
         }
 
 #if UNITY_EDITOR
+        public static void CreateCSV(string path, string[] languages)
+        {
+            string header = "\"key\"";
+            foreach (var language in languages)
+            {
+                header += $",\"{language}\"";
+            }
+            File.WriteAllText(path, header);
+            AssetDatabase.Refresh();
+        }
 
         public void Add(string key, string value, string language)
         {

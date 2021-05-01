@@ -21,8 +21,7 @@ namespace personaltools.textlocalizedtool.editor
 
         string value;
         private Vector2 scroll;
-        string location;
-        string fileName;
+        string fileName = @"file 1";
         List<Languages> languages = new List<Languages>();
 
         public void OnGUI()
@@ -50,7 +49,6 @@ namespace personaltools.textlocalizedtool.editor
             if(currentState == WindowState.Create)
             {                
                 fileName = EditorGUILayout.TextField("File Name",fileName);
-                location = EditorGUILayout.TextField("File Location", location);
 
                 EditorGUILayout.LabelField("Languages", EditorStyles.boldLabel);
                 scroll = EditorGUILayout.BeginScrollView(scroll);
@@ -81,6 +79,7 @@ namespace personaltools.textlocalizedtool.editor
                 if (isCreate)
                 {
                     // Call CSV Loader
+                    LocalizationSystem.CreateCSV(fileName, languages);
 
                     // Reset State
                     currentState = WindowState.Initialize;

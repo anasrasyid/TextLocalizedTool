@@ -161,6 +161,15 @@ namespace personaltools.textlocalizedtool
         }
 
 #if UNITY_EDITOR
+        public static void CreateCSV(string name, List<Languages> languages)
+        {
+            HashSet<string> codes = new HashSet<string>();
+            foreach (var language in languages)
+                codes.Add(language.GetStringValuesAtribute());
+
+            string path = Application.dataPath + @"/";
+            CSVLoader.CreateCSV(path + name +".csv", codes.ToArray());
+        }
         public static void Add(string key, string value, string language)
         {
 
