@@ -16,18 +16,77 @@ namespace personaltools.textlocalizedtool.editor
         }
 
         Languages defaultLanguage = LocalizationSystem.DefaultLanguage;
+        enum WindowState { Initialize, Load, Create}
+        WindowState currentState = WindowState.Initialize;
 
         string value;
         private Vector2 scroll;
+        string location;
+        string fileName;
+        List<Languages> languages = new List<Languages>();
 
         public void OnGUI()
         {
-            SearchBar();
+            if(currentState == WindowState.Initialize)
+            {
+                GUILayout.Label("Localiser Menu", EditorStyles.boldLabel);
+                bool isLoad = GUILayout.Button("Load", GUILayout.MinHeight(25));
+                GUILayout.Space(5);
+                bool isCreate = GUILayout.Button("Create", GUILayout.MinHeight(25));
+                currentState = isLoad ? WindowState.Load : currentState;
+                currentState = isCreate ? WindowState.Create : currentState;
+            }
 
-            ShowAll();
-            GetSearchResults();
+            if(currentState == WindowState.Load)
+            {
+                SearchBar();
 
-            ShowLanguageInCSV();
+                ShowAll();
+                GetSearchResults();
+
+                ShowLanguageInCSV();
+            }
+
+            if(currentState == WindowState.Create)
+            {                
+                fileName = EditorGUILayout.TextField("File Name",fileName);
+                location = EditorGUILayout.TextField("File Location", location);
+
+                EditorGUILayout.LabelField("Languages", EditorStyles.boldLabel);
+                scroll = EditorGUILayout.BeginScrollView(scroll);
+                for (int i = 0; i < languages.Count; i++)
+                {
+                    EditorGUILayout.BeginHorizontal("Box");
+
+                    EditorGUILayout.LabelField($"Language - {i + 1}");
+                    languages[i] = (Languages)EditorGUILayout.EnumPopup(languages[i]);
+
+                    GUIContent deleteContent = EditorGUIUtility.IconContent("winbtn_win_close", "Remove");
+                    if (GUILayout.Button(deleteContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
+                    {
+                        languages.RemoveAt(i);
+                    }
+                    
+                    EditorGUILayout.EndHorizontal();
+                }
+                EditorGUILayout.EndScrollView();
+
+                bool isAdd = GUILayout.Button("Add Language");
+                if (isAdd)
+                {
+                    languages.Add(Languages.English);
+                }
+                
+                bool isCreate = GUILayout.Button("Create File");
+                if (isCreate)
+                {
+                    // Call CSV Loader
+
+                    // Reset State
+                    currentState = WindowState.Initialize;
+                    languages.Clear();
+                }
+            }
         }
 
         public void SearchBar()
@@ -136,7 +195,7 @@ namespace personaltools.textlocalizedtool.editor
             if (LocalizationSystem.ActiveMode == LocalizationSystem.Mode.Offline)
             {
                 GUIContent deleteContent = EditorGUIUtility.IconContent("winbtn_win_close", "Remove");
-                if (GUILayout.Button(deleteContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
+                if (GUILayout.Button(deleteContent, GUILayout.MinWidth(20), GUILayout.MinWidth(20)))
                 {
                     if (EditorUtility.DisplayDialog("Remove Key " + element.Key + "?",
                         "This will remove the element from localisation, are sure?", "Do it"))
@@ -147,8 +206,8 @@ namespace personaltools.textlocalizedtool.editor
                     }
                 }
 
-                GUIContent editContent = EditorGUIUtility.IconContent("_Popup", "Remove");
-                if (GUILayout.Button(editContent, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
+                GUIContent editContent = EditorGUIUtility.IconContent("_Popup", "Edit");
+                if (GUILayout.Button(editContent, GUILayout.MinWidth(20), GUILayout.MinWidth(20)))
                 {
                     string languageCode = LocalizationSystem.DefaultLanguage.GetStringValuesAtribute();
                     TextLocaliserEditWindow.Open(element.Key, element.Value, languageCode);
