@@ -110,7 +110,7 @@ namespace personaltools.textlocalizedtool
             for (int i = 1; i < header.Length; i++)
             {
                 Trim(ref header[i]);
-                if (header[i].Contains(language))
+                if (header[i].CompareTo(language) == 0)
                     return i;
             }
             return -1;
@@ -136,6 +136,36 @@ namespace personaltools.textlocalizedtool
             AssetDatabase.Refresh();
         }
 
+        public void AddLanguage(string language)
+        {
+            string[] lines = csvFile.text.Split(lineSeperator);
+            string empty = ",\"\"";
+
+            lines[0] += $",\"{language}\"";
+            for (int i = 1; i < lines.Length; i++)
+                lines[i] += empty;
+
+            WriteText(lines);
+            UnityEditor.AssetDatabase.Refresh();
+        }
+
+        public void RemoveLanguage(string language)
+        {
+            int index = indexLanguage(language);
+
+            string[] lines = csvFile.text.Split(lineSeperator);
+            for(int i = 0; i < lines.Length; i++)
+            {                
+                var fields = CSVParser.Split(lines[i]);
+                fields = fields.Where(field => (field != fields[index])).ToArray();
+
+                lines[i] = String.Join(",", fields);
+            }
+
+            WriteText(lines);
+            UnityEditor.AssetDatabase.Refresh();
+        }
+
         public void Add(string key, string value, string language)
         {
             value.Replace(Environment.NewLine, "\n");
@@ -143,13 +173,14 @@ namespace personaltools.textlocalizedtool
 
             var header = GetAllLanguage();
             string append = string.Format("\n\"{0}\"", key);
+            string empty = ",\"\"";
 
             foreach (string h in header)
             {
                 if (h.Contains(language))
                     append += string.Format(",\"{0}\"", value);
                 else
-                    append += ",\"\"";
+                    append += empty;
             }
             
             File.AppendAllText(path, append);

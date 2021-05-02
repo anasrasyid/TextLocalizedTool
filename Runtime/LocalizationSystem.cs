@@ -39,8 +39,8 @@ namespace personaltools.textlocalizedtool
         private static Dictionary<string, string> localised;
 
         private static bool isInit;
-        private static int[] langugaeIndex;
-        public static int[] LanguageAvailable { get { return langugaeIndex; } }
+        private static int[] languagesIndex;
+        public static int[] LanguageAvailable { get { return languagesIndex; } }
 
         public enum Mode { Online, Offline};
         public static Mode ActiveMode;
@@ -107,8 +107,8 @@ namespace personaltools.textlocalizedtool
             Debug.Assert(AssetCSV != null, "Please Insert Localised File in Localization Manager");
 
             csvLoader = csvLoader ?? new CSVLoader();
-            csvLoader.LoadCSV(AssetCSV, out langugaeIndex);
-            onChangeCSV?.Invoke(langugaeIndex);
+            csvLoader.LoadCSV(AssetCSV, out languagesIndex);
+            onChangeCSV?.Invoke(languagesIndex);
 
             UpdateDictionaries();
             isInit = true;
@@ -170,6 +170,31 @@ namespace personaltools.textlocalizedtool
             string path = Application.dataPath + @"/";
             CSVLoader.CreateCSV(path + name +".csv", codes.ToArray());
         }
+
+        public static void AddLanguage(Languages language)
+        {
+            if (languagesIndex.Contains((int)language))
+                return;
+
+            csvLoader = csvLoader ?? new CSVLoader();
+            csvLoader.LoadCSV(AssetCSV, out languagesIndex);
+            csvLoader.AddLanguage(language.GetStringValuesAtribute());
+            csvLoader.LoadCSV(AssetCSV, out languagesIndex);
+            UpdateDictionaries();
+        }
+
+        public static void RemoveLanguage(Languages language)
+        {
+            if (!languagesIndex.Contains((int)language))
+                return;
+
+            csvLoader = csvLoader ?? new CSVLoader();
+            csvLoader.LoadCSV(AssetCSV, out languagesIndex);
+            csvLoader.RemoveLanguage(language.GetStringValuesAtribute());
+            csvLoader.LoadCSV(AssetCSV, out languagesIndex);
+            UpdateDictionaries();
+        }
+
         public static void Add(string key, string value, string language)
         {
 
@@ -178,14 +203,11 @@ namespace personaltools.textlocalizedtool
                 value.Replace('"', '\"');
             }
 
-            if (csvLoader == null)
-            {
-                csvLoader = new CSVLoader();
-            }
+            csvLoader = csvLoader ?? new CSVLoader();
 
-            csvLoader.LoadCSV(AssetCSV, out langugaeIndex);
+            csvLoader.LoadCSV(AssetCSV, out languagesIndex);
             csvLoader.Add(key, value, language);
-            csvLoader.LoadCSV(AssetCSV, out langugaeIndex);
+            csvLoader.LoadCSV(AssetCSV, out languagesIndex);
 
             UpdateDictionaries();
         }
@@ -197,28 +219,22 @@ namespace personaltools.textlocalizedtool
                 value.Replace('"', '\"');
             }
 
-            if (csvLoader == null)
-            {
-                csvLoader = new CSVLoader();
-            }
+            csvLoader = csvLoader ?? new CSVLoader();
 
-            csvLoader.LoadCSV(AssetCSV, out langugaeIndex);
+            csvLoader.LoadCSV(AssetCSV, out languagesIndex);
             csvLoader.Edit(key, value, language);
-            csvLoader.LoadCSV(AssetCSV, out langugaeIndex);
+            csvLoader.LoadCSV(AssetCSV, out languagesIndex);
 
             UpdateDictionaries();
         }
 
         public static void Remove(string key)
         {
-            if (csvLoader == null)
-            {
-                csvLoader = new CSVLoader();
-            }
+            csvLoader = csvLoader ?? new CSVLoader();
 
-            csvLoader.LoadCSV(AssetCSV, out langugaeIndex);
+            csvLoader.LoadCSV(AssetCSV, out languagesIndex);
             csvLoader.Remove(key);
-            csvLoader.LoadCSV(AssetCSV, out langugaeIndex);
+            csvLoader.LoadCSV(AssetCSV, out languagesIndex);
 
             UpdateDictionaries();
         }

@@ -119,7 +119,7 @@ namespace personaltools.textlocalizedtool.editor
                 addLanguage = (Languages)EditorGUILayout.EnumPopup(addLanguage);
                 if (GUILayout.Button("Add", GUILayout.MaxWidth(60f), GUILayout.MaxHeight(20f)))
                 {
-
+                    LocalizationSystem.AddLanguage(addLanguage);
                 }
                 EditorGUILayout.EndHorizontal();
 
@@ -128,7 +128,7 @@ namespace personaltools.textlocalizedtool.editor
                 removeLanguage = ActiveLanguage("",removeLanguage, 100);
                 if (GUILayout.Button("Remove", GUILayout.MaxWidth(60f), GUILayout.MaxHeight(20f)))
                 {
-
+                    LocalizationSystem.RemoveLanguage(removeLanguage);
                 }
                 EditorGUILayout.EndHorizontal();
             }            
