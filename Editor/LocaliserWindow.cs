@@ -44,6 +44,7 @@ namespace personaltools.textlocalizedtool.editor
                 GetSearchResults();
 
                 ShowLanguageInCSV();
+                UtilityLocaliser();
             }
 
             if(currentState == WindowState.Create)
@@ -106,26 +107,59 @@ namespace personaltools.textlocalizedtool.editor
             EditorGUILayout.EndHorizontal();
         }
 
+        Languages addLanguage, removeLanguage;
+        bool isUtility;
+
+        public void UtilityLocaliser()
+        {
+            isUtility = EditorGUILayout.BeginToggleGroup("Utility", isUtility);
+            {
+                EditorGUILayout.BeginHorizontal("box");
+                EditorGUILayout.LabelField("Add Language");
+                addLanguage = (Languages)EditorGUILayout.EnumPopup(addLanguage);
+                if (GUILayout.Button("Add", GUILayout.MaxWidth(60f), GUILayout.MaxHeight(20f)))
+                {
+
+                }
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.BeginHorizontal("box");
+                EditorGUILayout.LabelField("Remove Language");
+                removeLanguage = ActiveLanguage("",removeLanguage, 100);
+                if (GUILayout.Button("Remove", GUILayout.MaxWidth(60f), GUILayout.MaxHeight(20f)))
+                {
+
+                }
+                EditorGUILayout.EndHorizontal();
+            }            
+            EditorGUILayout.EndToggleGroup();
+        }
+
+        public Languages ActiveLanguage(string label, Languages selected, int minWidth = 250)
+        {
+            var items = new string[LocalizationSystem.LanguageAvailable.Length];
+            int index = 0;
+            for (int i = 0; i < items.Length; i++)
+            {
+
+                items[i] = ((Languages)LocalizationSystem.LanguageAvailable[i]).ToString();
+                if ((int)selected == LocalizationSystem.LanguageAvailable[i])
+                    index = i;
+            }
+
+            index = EditorGUILayout.Popup(label, index, items,
+                GUILayout.MinWidth(minWidth), GUILayout.MaxWidth(300));
+
+            return items[index].GetLanguageEnum();
+        }
+
         public void ShowLanguageInCSV()
         {
             GUILayout.Label("Details", EditorStyles.boldLabel);
 
             EditorGUILayout.BeginHorizontal("Box");
 
-            var items = new string[LocalizationSystem.LanguageAvailable.Length];
-            int index = -1;
-            for(int i = 0; i < items.Length; i++)
-            {
-
-                items[i] = ((Languages)LocalizationSystem.LanguageAvailable[i]).ToString();
-                if((int)defaultLanguage == LocalizationSystem.LanguageAvailable[i])
-                    index = i;
-            }
-
-            index = EditorGUILayout.Popup("Editor Language :", index, items, 
-                GUILayout.MinWidth(250), GUILayout.MaxWidth(300));
-
-            defaultLanguage = items[index].GetLanguageEnum();
+            defaultLanguage = ActiveLanguage("Editor Language :", defaultLanguage);
 
             if (LocalizationSystem.DefaultLanguage != defaultLanguage)
             {
