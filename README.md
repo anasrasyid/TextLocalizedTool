@@ -29,9 +29,15 @@ To open localiser click Window > Localiser.
 
 Localiser window editor have two mode :
 - load  : to load current localization file
+
     ![image](./images/localiser-load.JPG)
+
+
 - create : to create new localization file
+
     ![image](./images/localiser-create.JPG)
+
+    
 
 ### Localiser Manager
 ![image](./images/localiser-manager.JPG)
