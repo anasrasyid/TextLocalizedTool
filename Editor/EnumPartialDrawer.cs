@@ -3,30 +3,26 @@ using UnityEngine;
 
 namespace personaltools.textlocalizedtool.Editor
 {
-    public class Pair<T, U>
+    public struct Pair<T, U>
     {
-        public Pair()
-        {
-        }
+        public T First;
+        public U Second;
 
         public Pair(T first, U second)
         {
-            this.First = first;
-            this.Second = second;
+            First = first;
+            Second = second;
         }
-
-        public T First { get; set; }
-        public U Second { get; set; }
-    };
+    }
 
 
-    [CustomPropertyDrawer(typeof(EnumPartial))]
+    [CustomPropertyDrawer(typeof(EnumPartialAtribute))]
     public class EnumPartialDrawer : PropertyDrawer
     {
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EnumPartial atb = attribute as EnumPartial;
+            EnumPartialAtribute atb = attribute as EnumPartialAtribute;
             int[] showIndex = null;
 
             if (atb.type.GetField(atb.propertyName) != null)
@@ -52,7 +48,8 @@ namespace personaltools.textlocalizedtool.Editor
             }
 
             // Get Selected Index
-            int index = -1;
+            // Default Index is zero
+            int index = 0;
             for (int i = 0; i < arrayIndex.Length; i++)
             {
                 if (arrayIndex[i].Second == property.enumValueIndex)
@@ -77,7 +74,7 @@ namespace personaltools.textlocalizedtool.Editor
             // Set Enum Value
             property.enumValueIndex = realIndex;
 
-            // Default
+            //Default
             //EditorGUI.PropertyField(position, property, new GUIContent("*" + label.text));
 
             EditorGUI.EndProperty();

@@ -99,7 +99,7 @@ namespace personaltools.textlocalizedtool
             });
 
             assetCSV = new TextAsset(result);
-            Init();            
+            Init();
         }
 
         public static void Init()

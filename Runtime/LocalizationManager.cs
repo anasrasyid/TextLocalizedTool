@@ -12,7 +12,7 @@ namespace personaltools.textlocalizedtool
         public static int[] avaliable;
 
         public static int[] LanguageAvailable = new int[] { };
-        [EnumPartial(typeof(LocalizationManager), "LanguageAvailable")]
+        [EnumPartialAtribute(typeof(LocalizationManager), "LanguageAvailable")]
         public Languages currentLanguage;
         public Action onChangeLanguage;
 
