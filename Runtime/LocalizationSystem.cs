@@ -19,7 +19,7 @@ namespace personaltools.textlocalizedtool
             set
             {
                 language = value;
-                Init();
+                UpdateDictionaries();
             }
         }
 
@@ -31,7 +31,7 @@ namespace personaltools.textlocalizedtool
             set
             {
                 defaultLanguage = value;
-                Init();
+                UpdateDictionaries();
             }
         }
 
@@ -56,10 +56,11 @@ namespace personaltools.textlocalizedtool
             } 
             set 
             {
-                if(value != null && ActiveMode == Mode.Offline)
+                if(value != null)
                 {
                     assetCSV = value;
-                    Init();
+                    if (ActiveMode == Mode.Offline)
+                        Init();
                 }
             } 
         }
@@ -74,17 +75,23 @@ namespace personaltools.textlocalizedtool
             }
             set
             {
-                if(value != String.Empty && ActiveMode == Mode.Online)
+                if(value != null)
                 {
                     csvURL = value;
-                    DownloadFileAsnyc(csvURL);
+                    if(ActiveMode == Mode.Online)
+                    {
+                        if (Application.isEditor)
+                            DownloadFileAsnyc(csvURL);
+                        else
+                            Init();
+                    }
                 }                
             }
         }
 
         private static async void DownloadFileAsnyc(string url)
         {
-            if (url == string.Empty)
+            if (url == null || url == string.Empty)
                 return;
 
             string result = await Task.Run(() =>
@@ -102,8 +109,23 @@ namespace personaltools.textlocalizedtool
             Init();
         }
 
+        private static void DownloadFile(string url)
+        {
+            string rawFile = string.Empty;
+            using (WebClient client = new WebClient())
+            {
+                rawFile = client.DownloadString(url);
+                Debug.Assert(rawFile != string.Empty, "Error Localization URL");
+            }
+            assetCSV = new TextAsset(rawFile);
+        }
+
         public static void Init()
         {
+            isInit = true;
+            if (Application.isPlaying && ActiveMode == Mode.Online)
+                DownloadFile(CSVURL);
+
             Debug.Assert(AssetCSV != null, "Please Insert Localised File in Localization Manager");
 
             csvLoader = csvLoader ?? new CSVLoader();
@@ -111,7 +133,6 @@ namespace personaltools.textlocalizedtool
             onChangeCSV?.Invoke(languagesIndex);
 
             UpdateDictionaries();
-            isInit = true;
         }
 
         public static List<string> GetLanguageNames()
@@ -137,6 +158,9 @@ namespace personaltools.textlocalizedtool
 
         public static void UpdateDictionaries()
         {
+            if (assetCSV == null)
+                return;
+
             string defaultCode = DefaultLanguage.GetStringValuesAtribute();
             defaultlocalised = csvLoader.GetDictionary(defaultCode);
 

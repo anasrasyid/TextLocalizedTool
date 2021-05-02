@@ -44,7 +44,8 @@ namespace personaltools.textlocalizedtool.editor
                 GetSearchResults();
 
                 ShowLanguageInCSV();
-                UtilityLocaliser();
+                if(LocalizationSystem.ActiveMode == LocalizationSystem.Mode.Offline)
+                    UtilityLocaliser();
             }
 
             if(currentState == WindowState.Create)

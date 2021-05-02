@@ -323,8 +323,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentLanguage: 19
   currentMode: 1
-  AssetCSV: {fileID: 4900000, guid: eb9f8c98aeb7e6a428cfc8a4e8d5135b, type: 3}
-  CSVURL: https://docs.google.com/spreadsheets/d/e/2PACX-1vTVhXKwc_oFQoPlj5WBaK6dII56TsSzv4fN3OBGZtnlRz7EoaFnW2s1JY_SutZoEvIZGJIow90882ih/pub?gid=0&single=true&output=csv
+  assetCSV: {fileID: 4900000, guid: eb9f8c98aeb7e6a428cfc8a4e8d5135b, type: 3}
+  csvurl: https://docs.google.com/spreadsheets/d/e/2PACX-1vTVhXKwc_oFQoPlj5WBaK6dII56TsSzv4fN3OBGZtnlRz7EoaFnW2s1JY_SutZoEvIZGJIow90882ih/pub?gid=0&single=true&output=csv
 --- !u!4 &258663795
 Transform:
   m_ObjectHideFlags: 0

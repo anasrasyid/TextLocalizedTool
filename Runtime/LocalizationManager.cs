@@ -12,17 +12,42 @@ namespace personaltools.textlocalizedtool
         public static int[] avaliable;
 
         public static int[] LanguageAvailable = new int[] { };
+        
         [EnumPartialAtribute(typeof(LocalizationManager), "LanguageAvailable")]
-        public Languages currentLanguage;
+        [SerializeField]
+        private Languages currentLanguage;
+        
         public Action onChangeLanguage;
 
-        public LocalizationSystem.Mode currentMode;
-        public TextAsset AssetCSV;
-        public string CSVURL;
+        [SerializeField]
+        private LocalizationSystem.Mode currentMode;
+
+        [SerializeField]
+        private TextAsset assetCSV;
+
+        [SerializeField]
+        private string csvurl;
 
         private void OnValidate()
         {
-            ChangeMode(currentMode);
+            if(currentMode != LocalizationSystem.ActiveMode)
+            {
+                ChangeMode(currentMode, csvurl, assetCSV);
+            }
+            else
+            {
+                if (assetCSV != LocalizationSystem.AssetCSV)
+                {
+                    ChangeMode(currentMode, assetCSV: assetCSV);
+                }
+                    
+                if (csvurl != LocalizationSystem.CSVURL)
+                {
+                    ChangeMode(currentMode, csvurl: csvurl);
+                }
+                    
+            }                        
+            
             ChangeLanguage(currentLanguage);
         }
 
@@ -44,12 +69,14 @@ namespace personaltools.textlocalizedtool
             currentLanguage = LocalizationSystem.Language;
         }
 
-        public void ChangeMode(LocalizationSystem.Mode mode)
+        public void ChangeMode(LocalizationSystem.Mode mode, string csvurl = null, TextAsset assetCSV = null)
         {
             LocalizationSystem.onChangeCSV = (int[] param) => { LanguageAvailable = param; };
             LocalizationSystem.ActiveMode = mode;
-            LocalizationSystem.AssetCSV = AssetCSV;
-            LocalizationSystem.CSVURL = CSVURL;
+
+            LocalizationSystem.AssetCSV = assetCSV;
+            LocalizationSystem.CSVURL = csvurl;
+            ChangeLanguage(currentLanguage);
         }
 
         public void ChangeLanguage(Languages currentLanguage)
