@@ -25,16 +25,16 @@ For details information and example, download sample project in folder Samples.
 ### Window Localiser
 To open localiser click Window > Localiser.
 
-![image](.\images\localiser-start.JPG)
+![image](./images/localiser-start.JPG)
 
 Localiser window editor have two mode :
 - load  : to load current localization file
-    ![image](.\images\localiser-load.JPG)
+    ![image](./images/localiser-load.JPG)
 - create : to create new localization file
-    ![image](.\images\localiser-create.JPG)
+    ![image](./images/localiser-create.JPG)
 
 ### Localiser Manager
-![image](.\images\localiser-manager.JPG)
+![image](./images/localiser-manager.JPG)
 
 Localization Manager class / script, control all activity in this tools. including change mode, change current csv file, change active language in csv file and cloud location for csv file. 
 
